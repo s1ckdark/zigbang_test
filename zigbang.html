@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <link rel="canonical" href="/index.html">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <title>No.1 부동산 앱 직방</title>
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org",
+        "@type": "NewsArticle",
+        "headline": "Open-source framework for publishing content",
+        "datePublished": "2015-10-07T12:02:41Z",
+        "image": [
+          "logo.jpg"
+        ]
+      }
+    </script>
+    <!--
+    1. jQuery 등 플러그인을 사용하지 않고 스크립트 구현 
+    2. 건물정보 영역은 제공된  items.json을 가지고 데이터 삽입 구현 
+    3. 문의하기 클릭 시 모바일에서 전화걸기 실행 
+    4. html validation체크 
+    5. amp를 이용하여 구현
+    6. 매물 이미지 클릭시 이미지 모달창 구현 
+    7. 다음 지도 추가  X AMP IFRAME 구글매
+    8. 이미지 슬라이드 구현  
+    -->
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+<style amp-custom>
+/* reset */
+/*! minireset.css v0.0.3 | MIT License | github.com/jgthms/minireset.css */html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,iframe,object,audio,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}button,img{line-height:1;vertical-align:top;border:0}table{width:100%;border:0;border-collapse:collapse;border-spacing:0;clear:both}hr{margin:0}img{font-size:1%}li,ol,ul{list-style:none}button{background:0 0;cursor:pointer}a{-webkit-tap-highlight-color:transparent;168tion:none}a:active,a:hover,a:link,a:visited{text-decoration:none}
+
+@font-face {
+  font-family: 'Noto Sans KR';
+  font-style: normal;
+  font-weight: 100;
+  src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff2) format('woff2'),
+       url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.woff) format('woff'),
+       url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Thin.otf) format('opentype');
+}
+    @font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 300;
+    src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff2) format('woff2'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.woff) format('woff'),
+        url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Light.otf) format('opentype');
+    }
+    @font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 400;
+    src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),
+            url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),
+            url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');
+    }
+    @font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 500;
+    src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff2) format('woff2'),
+            url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.woff) format('woff'),
+            url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Medium.otf) format('opentype');
+    }
+    @font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 700;
+    src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff2) format('woff2'),
+            url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.woff) format('woff'),
+            url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Bold.otf) format('opentype');
+    }
+    @font-face {
+    font-family: 'Noto Sans KR';
+    font-style: normal;
+    font-weight: 900;
+    src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff2) format('woff2'),
+            url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.woff) format('woff'),
+            url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Black.otf) format('opentype');
+    }
+ /*code for amp-font tag*/
+    .noto-loading{
+        font-family: 'Helvitca', 'Dotum', sans-serif;
+    }
+    .noto-missing{
+        font-family: 'Helvitca', 'Dotum', sans-serif;
+    }
+    .noto-loaded{
+        font-family: 'Noto Sans KR', 'Helvitca';
+    }
+
+/* define for use */
+.left {float:left;}
+.right {float:right;}
+.clearfix{zoom:1}
+.clearfix:after{content:"";display:block;clear:both}
+/* font */
+.headline {font-size:19px;font-weight:400;line-height:40px;color:#fff;text-indent:10px;padding-top:10px;margin-left:40px;}
+.font_title {font-size:17px;font-weight:700;line-height:40px;color:#616161;text-indent:10px;}
+.font_content {font-size:12px;font-weight:400;line-height:40px;color:#616161;text-indent:10px;}
+.font_content.office_title {font-weight:500;color:#000; line-height: 20px;margin-top:10px;margin-bottom:5px;}
+.font_content.dealer_title {font-weight:500;color:#000; line-height: 20px;margin-top:10px;margin-bottom:5px;}
+.font_content.dealer_info {font-weight: 300;color:#000; line-height: 20px;}
+.font_content.office_info {box-sizing: border-box;color:#000;font-weight:300;line-height:25px;}
+.font_content.json_title  {font-weight:500;color:#000; line-height: 20px;margin-bottom:5px;}
+.font_content.json_address  {font-weight:400;color:#000; line-height: 20px;margin-bottom:5px;border-bottom:1px solid #eee;}
+.font_content.json_info {box-sizing: border-box;color:#000;font-weight:400;line-height:25px;}
+/* layout */
+#wrapper {width:100%;height:100%;margin:0 auto;background-color: #f6f6f6;}
+.contents {position:relative;margin-bottom:10px;}
+.container {position:relative;overflow:hidden;width: calc(100% - 20px);margin:0 auto;border-bottom:1px solid #fbfbfb;}
+.box_list {position:relative;margin:0 auto;background:#fff;border:1px solid #e1e1df;padding:10px;box-sizing: border-box;line-height: 23px;color: #000;font-size:13px;}
+.box_list.map {padding:0;}
+/* media query */
+@media (min-width: 720px) {
+#wrapper {width: 360px;margin: 0 auto;}
+}
+
+/* header */
+header.summary-info {background: #ffa409;height: 56px;position:relative;}
+.primary {position: absolute;top: calc(50% - 11px);left: 16px;}
+.header_icon {position: absolute;top: calc(50% - 11px);right: 16px;}
+.header_icon li:first-child {margin-right: 20px;}
+/* dealer_safelevel */
+.dealer_safelevel {background: #0ec4bf;height:45px;padding: 9px 11px;box-sizing: border-box;font-size: 16px;font-weight: 400;line-height: 27px;color: #fff;}
+
+/* section - dealer */
+.zigbang-notice {background:#848484;border-width:0px;margin:10px auto;padding: 10px 15px;}
+.zigbang-notice p {font-size: 12px;font-weight: 100;line-height: 18px;color: #fff;}
+.zigbang-notice p em {font-weight: 400;font-style: normal;}
+
+/* detail List */
+ .valuation_mark {position:absolute;top:17px;right: 17px;}
+ .data_title {float:left;width:105px;color:#6a6a6a;background:#fafafa;font-weight:500;}
+ .data_detail {height:40px;background:#fff;}
+ .data_detail > em {font-size: 17px;font-weight: 700;font-style: normal;color: #ff7800;}
+ .detail_list {border-bottom:1px solid #eee;overflow: hidden;padding:0;margin:0;}
+/* location */
+.map_link {height: 40px;border: 1px solid #eee;}
+
+/* dealer */
+.office_info h2 {padding:5px 0px 2px;border-top:1px solid #eee;border-bottom:1px solid #eee;}
+.profile {width: 100px;height: 100px;border:1px solid #e1e1e1;position: relative;float:left;overflow:hidden;}
+.dealer_level {width: 100%;height: 25px;background: #0ec4bf;position: absolute;bottom: 0;left: 0;}
+.dealer_safelogo {margin-top: 3px;margin-left: 20px;}
+.font_content.office_info li:before {content:"·";font-size:20px;vertical-align:middle;line-height:20px;list-style:none;margin-right:5px;}
+/* jason_detail */
+.json_detail {margin-left:10px;}
+/* footer */
+footer.box_list {background: #fff !important;border:none;}
+.footer-1 {font-weight: 400;line-height: 21px;color: #999;}
+.footer-2 {font-size: 15px;color: #000;}
+.footer-3 {font-size: 14px;color: #ff7800;}
+
+/* btn */
+.btn, .btn a {display: block;color: #333;text-align:center;font-size: 17px;}
+.btn_map {width: calc(50% - 1px);float: left;background:#fff;}
+.btn_map:first-child {border-right: 1px solid #eee;} 
+.btn_map > .btn {line-height:40px;}
+.btn.call {width: 163px;height: 53px;font-size: 23px;font-weight: 500;line-height: 50px;color: #fff;background: #ff5200;border-radius: 30px;margin-top: 8px ;}
+
+/*icon styles*/
+/*아이콘 이미지를 하나로 합치는 작업 필요*/
+.icon {width: 22px;height: 22px;display: inline-block;background-size: 22px;background-repeat: no-repeat;vertical-align: middle;background-image:url("img/icon.png");}
+.icon_backspace {background-position: 0px 0px;}
+.icon_share {background-position: 0px -22px;}
+.icon_options {background-position: 0px -45px;}
+.icon_question {background-position:  0px -66px;margin-top: 2px;}
+.icon_safemark {background-image: url("img/safe_mark.png");width:90px;height:25px;background-size:90px;}
+.icon_map {background-position: 0px -88px;margin: -5px 7px 0 0;}
+.icon_roadview {background-position: 0px -112px;margin: -5px 7px 0 0;}
+.icon_dealer {background-position: 0px -158px;margin: 1px 0 0 5px;}
+.icon_mobile {background-position: 0px -135px;margin: 0px 5px 0 0;}
+</style>
+<script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
+<script async custom-element="amp-font" src="https://cdn.ampproject.org/v0/amp-font-0.1.js"></script>
+<script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
+<script async custom-element="amp-image-light your time in Englandbox" src="https://cdn.ampproject.org/v0/amp-image-lightbox-0.1.js"></script>
+<script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
+<script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.1.js"></script>
+</head>
+<body>
+<div id="wrapper">
+    <header class="summary-info">
+        <h2 class="headline">서울시 강남구 신사동</h2>
+        <nav class="primary">
+            <a href="#"><span class="icon icon_backspace"></span></a>
+        </nav>
+        <ul class="header_icon clearfix">
+            <li class="left">
+                 <a href="#">                           
+                 <span class="icon icon_share"></span></a>
+               </li>
+            <li class="left">
+                                      
+                    <a href="#"><span class="icon icon_options"></span></a>
+                  </li>
+        </ul>
+    </header>
+<main>
+  <amp-carousel width="720" height="720" layout="responsive" type="slides" autoplay delay="2000">
+  <amp-img src="img/room-1.png" width="720" height="720" layout="responsive" alt="a sample image" on="tap:lightbox1"></amp-img>
+  <amp-img src="img/room-2.png" width="720" height="720" layout="responsive" alt="a sample image" on="tap:lightbox1"></amp-img>
+  <amp-img src="img/room-3.png" width="720" height="720" layout="responsive" alt="another sample image" on="tap:lightbox1"></amp-img>
+  <amp-img src="img/room-4.png" width="720" height="720" layout="responsive" alt="and another sample image" on="tap:lightbox1"></amp-img>
+</amp-carousel>
+<!--amp-carousel-->
+<!--amp-image-lightbox on="tap:lightbox1" lightbox로 modal 구현-->
+        
+    <amp-image-lightbox id="lightbox1" layout="nodisplay" ></amp-image-lightbox>
+    <div class="dealer_safelevel">
+        <span class="icon icon_safemark left"></span>
+        <p class="left">가 등록한 방입니다.</p>
+        <button class="btn right">
+            <span class="icon icon_question"></span>
+        </button>
+    </div>
+    <div class="container">
+        <section>
+           
+                <header>
+                    <h2 class="font_title">신사동 예쁜 쓰리룸</h2>
+                </header>
+               <div class="contents">
+                        <dl class="detail_list font_content">
+                            <dt class="data_title">보증금</dt>
+                            <dd class="data_detail"><em>10000</em> 만원</dd>
+                            <dt class="data_title">월세</dt>
+                            <dd class="data_detail"><em>100</em> 만원</dd>
+                            <dt class="data_title">등록번호</dt>
+                            <dd class="data_detail">1234567</dd>
+                        </dl>
+                        <dl class="detail_list font_content">
+                            <dt class="data_title">주소</dt>
+                            <dd class="data_detail">서울시 강남구 신사동</dd>
+                            <dt class="data_title">인근전철역</dt>
+                            <dd class="data_detail">신사역(3호선) 압구정역(7호선)</dd>
+                            <dt class="data_title">층/건물층수</dt>
+                            <dd class="data_detail">3층/4층</dd>
+                            <dt class="data_title">크기</dt>
+                            <dd class="data_detail">전용면적 60.10m<sup>2</sup> 18.18P</dd>
+                            <dt class="data_title">구조</dt>
+                            <dd class="data_detail">쓰리룸+</dd>
+                            <dt class="data_title">건물형태</dt>
+                            <dd class="data_detail">다세대/다가구</dd>
+                        </dl>
+                        <dl class="detail_list font_content">
+                            <dt class="data_title">옵션</dt>
+                            <dd class="data_detail">옷장</dd>
+                            <dt class="data_title">관리비</dt>
+                            <dd class="data_detail">없음</dd>
+                            <dt class="data_title">관리비 포함항목</dt>
+                            <dd class="data_detail">수도</dd>
+                            <dt class="data_title">주차</dt>
+                            <dd class="data_detail">불가능</dd>
+                            <dt class="data_title">엘레베이터</dt>
+                            <dd class="data_detail">없음</dd>
+                            <dt class="data_title">입주가능일</dt>
+                            <dd class="data_detail">4월 21일 이후</dd>
+                        </dl>
+                    <amp-img src="img/valuation.png" width="100" height="49" layout="fixed" class="valuation_mark"></amp-img>
+                </div>
+            
+        </section>
+        <!--상세설명-->
+        <section>
+               <header>
+                    <h2 class="font_title">상세설명</h2>
+                </header>
+                <div class="contents">
+                    <p class="box_list">
+                    거실과 방이 크게 나온 신사동 3룸 입니다 ^^ <br>남향집이고 해가 너무 잘들고 근처 건물둘에 비해서 집이 깨끗하고 뷰도 좋은 편입니다. <br>가격은 집주인 분과 상의 후에 조정 가능합니다!!<br> 깔끔하고 좋은 집 보러 연락주세요!
+                    </p>
+                </div>
+        </section>
+        <!--담당자 한마디-->
+        <section>
+           
+                <header>
+                    <h2 class="font_title">담당자 한마디</h2>
+                </header>
+                <div class="contents">
+                    <p class="box_list">공휴일 및 주말에도 언제든지 상담 가능<br>차량 픽업 서비스 가능<br>조건에 맞는 집 답사<br>상담부터 계약까지 고객 맞춤형 서비스</p>
+                </div>
+            
+        </section>
+        <!--건물정보-->
+        <section>
+          
+            <header>
+                <h2 class="font_title">건물정보</h2>
+            </header>
+            <div class="box_list">
+            <amp-list src="//127.0.0.1/recurit/zigbang/items.json?ref=CANONICAL_URL" width="auto" height="126" layout="fixed-height">
+                   <template type="amp-mustache">
+                          <div class="json_items clearfix">
+                            <div class="left">
+                               <amp-img src="{{img}}" title="json-itmes-img" width="120" height="120" layout="responsive"></amp-img>
+                           </div>
+                            <div class="left json_detail">
+                                <p class="font_content json_title">{{name}}</p>
+                                <p class="font_content json_address">{{address1}} {{address2}} {{address3}}</p>
+                                 <ul class="font_content.json_info">
+                                    <li>{{floor}}</li>
+                                    <li>{{rooms}}</li>
+                                    <li>{{established}}</li>
+                                </ul>
+                                </div>
+
+                         </div>
+                            </template>
+             </amp-list>
+             <!--amp-list json data handling-->
+     
+                                     
+                </div>
+      
+        </section>
+                <!--mockup data start-->
+              <section>
+                 <header>
+                <h2 class="font_title">건물정보</h2>
+            </header>
+            <div class="box_list">
+                           <div class="json_items clearfix">
+                             <div class="left">
+                            <img src="https://zigbang.s3-ap-northeast-1.amazonaws.com/public/buildings/18304.jpg" title="json-itmes-img" width="120" height="120" >
+                            </div>
+                            <div class="left json_detail">
+                                <p class="font_content json_title">고려 아카데미 텔</p>
+                                <p class="font_content json_address">서울시 마포구 아현동 473-3</p>
+                                <p class="font_content json_info">17층</p>
+                                <p class="font_content json_info">356세대</p>
+                                <p class="font_content json_info">1987.11</p>
+                           </div>
+                       </div>
+                </div>
+          </section>
+  <!--mockup data endt-->
+<!--location-->
+<section>
+        <header>
+            <h2 class="font_title">위치정보</h2>
+        </header>
+        <div class="box_list map">
+        <amp-iframe width="600" height="400" layout="responsive" sandbox="allow-scripts allow-same-origin allow-popups" frameborder="0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJ2eUgeAK6j4ARbn5u_wAGqWA&key=AIzaSyCNCZ0Twm_HFRaZ5i-FuPDYs3rLwm4_848"></amp-iframe>
+        <div class="map_link">
+         <ul>
+            <li class="btn_map">
+                <a href="#" class="btn "><span class="icon icon_map"></span>지도보기</a>
+            </li>
+            <li class="btn_map">
+                <a href="#" class="btn"><span class="icon icon_roadview"></span>로드뷰보기</a>
+            </li>
+        </ul>
+        </div>
+    </div>
+ </section>
+
+<!--dealerInfo-->
+<section id="dealer">
+            <header>
+                <h2 class="font_title">중개사정보</h2>
+            </header>
+            <div class="box_list">
+            <div class="clearfix profile_info">
+            <div class="left profile">
+                    <amp-img src="img/dealer_profile.png" width="200" height="200" layout="responsive"></amp-img>
+                    <div class="dealer_level">
+                        <amp-img src="img/safe_profile_mark.png" width="61" height="18" layout="fixed" class="dealer_safelogo"></amp-img>
+                    </div>
+                </div>
+            <div class="left">
+                    <h2 class="font_content dealer_title">대표공인중개사 (이갑영)</h2>       
+                    <ul class="font_content dealer_info">
+                        <li>okok@naver.com</li>
+                        <li>010-1234-4567</li>
+                    </ul> 
+                </div>
+                </div>
+                <div class="office_info clearfix">
+                    <h2 class="font_content office_title">중개사무소 정보</h2>
+                    <ul class="font_content office_info">
+                        <li>서울시 마포구, 테리 부동산 (김테리)</li>
+                        <li>대표번호:1588-1688</li>
+                    </ul>
+                </div>
+                </div>
+        
+</section>
+
+<div class="zigbang-notice">
+    <p>이 방은 <em>공인중개사가 등록한 중개 매물</em>입니다.</p>
+    <p>공인중개사를 통해 <em>안전하게 계약</em>할 수 있으며, <em>법정 중개 보수가 발생</em>합니다.</p>
+</div>
+</div>
+<footer class="box_list clearfix">
+        <div class="left">
+            <p class="footer-1">우정공인중개사(김성훈)</p>
+            <p class="footer-2">중개보조원(한유진팀장)</p>
+            <p class="footer-3">010-5228-7825<span class="icon icon_dealer" aria-hidden="true"></span></p>
+        </div>
+        <div class="right">
+        <a href="tel:+821052287825" class="btn call"><span class="icon icon_mobile" aria-hidden="true"></span>문의하기</a>
+        </div>
+</footer>
+
+</main>
+</div>
+
+<!-- <script>
+function modal(type){
+    var overlay = document.getElementById('overlay');
+    if(type=="open"){overlay.classList.remove("is-hidden");}
+    else {overlay.classList.add("is-hidden");}
+}
+
+function loadJSON(callback) {   
+    var xobj = new XMLHttpRequest();
+        xobj.overrideMimeType("application/json");
+    xobj.open('GET', 'items.json', true); 
+    xobj.onreadystatechange = function () {
+          if (xobj.readyState == 4 && xobj.status == "200") {
+            callback(xobj.responseText);
+          }
+    };
+    xobj.send(null);  
+ }
+function insertData(id, type, val){
+    var target = document.querySelectorAll('[data-item]='+id);
+    if(type == "text") {target.innerHTML = val;}
+    else if(type=="img") { target.childNodes[0].setAttribute("src", val);}
+}
+function mapping(){
+    var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+var options = { //지도를 생성할 때 필요한 기본 옵션
+    center: new daum.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+    level: 3 //지도의 레벨(확대, 축소 정도)
+};
+
+var map = new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
+}
+ function init() {
+ loadJSON(function(response) {
+    var items = JSON.parse(response);    
+    // insertData('address1', 'text', items.datas[0].address1);
+    // insertData('address2', 'text', items.datas[0].address2);
+    insertData('img', 'img', items.datas[0].img);
+    insertData('name', 'text', items.datas[0].name);
+    insertData('address1', 'text', items.datas[0].address1);
+    insertData('address2', 'text', items.datas[0].address2);
+    insertData('img', 'img', items.datas[0].img);
+    insertData('name', 'text', items.datas[0].name);
+    mapping();
+ });
+
+var el = document.getElementById('img').childNodes[0];
+    clickerFn = function() {
+    modal('open');
+}
+el.addEventListener('click', clickerFn);
+}
+init();
+ </script> -->
+ <!--pure javscript 작업 중 amp로 전환-->
+ <amp-font layout="nodisplay" font-family="Noto Sans KR" timeout="2000" on-error-remove-class="noto-loaded" on-error-add-class="noto-missing" on-load-remove-class="noto-loading" on-load-add-class="noto-loaded"></amp-font>
+</body>
+</html>
